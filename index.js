@@ -12,8 +12,8 @@ const db = mysql.createConnection(
 
 const questions = ["View All Employees", "Add Employee", "Update Employee Role", "View All Roles", "Add Role", "View All Departments", "Add Department"]
 
-function init() {
-	inquirer
+async function init() {
+	await inquirer
 		.prompt([//prompts the user with questions
 			{
 				type: 'list',
@@ -45,30 +45,33 @@ function init() {
 
 							break;
 					}
-				});}
+				});
+			}
 
-function addEmployee() {
-	let roles = db.execute('SELECT title, id FROM role');
-	console.log(roles);
-	// inquirer
-	// 	.prompt([
-	// 		{
-	// 			type: 'input',
-	// 			name: 'firstName',
-	// 			message: "What is the employee's first name?"
-	// 		},
-	// 		{
-	// 			type: 'input',
-	// 			name: 'lastName',
-	// 			message: "What is the employee's last name?"
-	// 		},
-	// 		{
-	// 			type: 'list',
-	// 			name: ''
-	// 		}
-	// 			]).then((data) => {
+async function addEmployee() {
+	let roles = await db.execute('SELECT title, id FROM role');
+	{roleName: roles.title}
+	inquirer
+		.prompt([
+			{
+				type: 'input',
+				name: 'firstName',
+				message: "What is the employee's first name?"
+			},
+			{
+				type: 'input',
+				name: 'lastName',
+				message: "What is the employee's last name?"
+			},
+			{
+				type: 'list',
+				name: 'role',
+				message: "What is the employee's role?",
+				choices: roles
+			}
+				]).then((data) => {
 
-	// 			});
+				});
 }
 
 init();
